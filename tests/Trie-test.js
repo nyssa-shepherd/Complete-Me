@@ -87,7 +87,53 @@ describe('TRIE', () => {
 
   });
 
+  describe('SELECT',() => {
+
+    it('Should add a selected word to trie.suggestions array', () => {
+      trie.insert('ant');
+      trie.select('ant');
+      expect(trie.suggest('an')).to.deep.equal(['ant']);
+    });
+
+    it('Should have new selected words start with a frequency value of 1', () => {
+      trie.insert('ant');
+      trie.select('ant');
+      expect(trie.root.children['a'].children['n'].children['t'].frequency).to.equal(1);
+    });
+
+    it('Should have the selection value increase if a word is selected multiple times', () => {
+      trie.insert('ant');
+      trie.select('ant');
+      expect(trie.root.children['a'].children['n'].children['t'].frequency).to.equal(1);
+
+      trie.select('ant');
+      expect(trie.root.children['a'].children['n'].children['t'].frequency).to.equal(2);
+
+      trie.select('ant');
+      expect(trie.root.children['a'].children['n'].children['t'].frequency).to.equal(3);
+    });
+
+    it('Should be able to hold more than one word', () => {
+      trie.insert('ant');
+      trie.select('ant');
+      expect(trie.root.children['a'].children['n'].children['t'].frequency).to.equal(1);
+
+      trie.insert('apple');
+      trie.select('apple');
+      expect(trie.root.children['a'].children['p'].children['p'].children['l'].children['e'].frequency).to.deep.equal(1);
+
+      expect(trie.suggest('')).to.deep.equal(['ant', 'apple']);
+    });
+});
+
   describe('DELETE', () => {
+
+    it('should decrease the length by one after deleting an item', () => {
+      trie.insert('ant');
+      expect(trie.length).to.equal(1);
+      trie.delete('ant');
+      expect(trie.length).to.equal(0);
+    });
 
   });
 
