@@ -2,9 +2,14 @@ import { expect } from 'chai';
 import Node from '../lib/Node'
 import Trie from '../lib/Trie'
 
+
 describe('TRIE', () => {
   let trie;
   let node;
+
+  const fs = require('fs');
+  const text = "/usr/share/dict/words";
+  const dictionary = fs.readFileSync(text).toString().trim().split('\n');
 
   beforeEach(() => {
     trie = new Trie();
@@ -54,40 +59,32 @@ describe('TRIE', () => {
 
     it('Should not suggest words that do not partially match the inserted phrase', () => {
       trie.insert('ant');
-      trie.insert('hell');
+      trie.insert('hello');
       trie.insert('help');
-      expect(trie.suggest('hel')).to.deep.equal(['hell', 'help']);
+      expect(trie.suggest('hel')).to.deep.equal(['hello', 'help']);
     });
 
     it('Should suggest all inserted words on an empty string', () => {
       trie.insert('ant');
       trie.insert('anti');
-      trie.insert('hell');
+      trie.insert('hello');
       trie.insert('help');
-      expect(trie.suggest('')).to.deep.equal(['ant', 'anti', 'hell', 'help']);
+      expect(trie.suggest('')).to.deep.equal(['ant', 'anti', 'hello', 'help']);
     });
   });
 
-  describe('COUNT', () => {
-
-  });
-
   describe('POPULATE', () => {
+    
     it('Should populate with words from dictionary', () => {
       trie.populate(dictionary);
-      expect(trie.count).to.equal(235886);
+      expect(trie.length).to.equal(234371);
     });
 
     it('Should suggest words from the dictionary', () => {
       trie.populate(dictionary);
-      expect(trie.suggest('piz')).to.deep.equal([ 'pize', 'pizza', 'pizzeria', 'pizzicato', 'pizzle' ]);
+      expect(trie.suggest('anthec')).to.deep.equal(['anthecological', 'anthecologist', 'anthecology' ]);
     })
 
-    it('Should suggest populated words', () => {
-      trie.populate(['ape', 'apple', 'ascot']);
-      expect(trie.count).to.equal(3);
-      expect(trie.suggest('a')).to.deep.equal(['ape', 'apple', 'ascot']);
-    });
   });
 
   describe('DELETE', () => {
