@@ -135,6 +135,21 @@ describe('TRIE', () => {
       expect(trie.length).to.equal(0);
     });
 
-  });
+    it('should not suggest words that have been deleted', () => {
+      trie.insert('ant');
+      expect(trie.suggest('an')).to.deep.equal(['ant']);
+      trie.delete('ant');
+      expect(trie.root.children['a'].children['n'].children['t'].wordEnd).to.equal(null);
+    })
+
+    it('should not suggest words that have been deleted', () => {
+      trie.insert('anti');
+      trie.insert('anthem');
+      trie.insert('stuff');
+      trie.delete('anthem');
+      expect(trie.suggest('ant')).to.deep.equal(['anti'])
+    })
+
+  })
 
 });
