@@ -124,6 +124,13 @@ describe('TRIE', () => {
 
       expect(trie.suggest('')).to.deep.equal(['ant', 'apple']);
     });
+
+    it('should put the word to the front of the array', () => {
+      trie.insert('apple')
+      trie.insert('ant');
+      trie.select('ant');
+      expect(trie.suggest('a')).to.deep.equal(['ant', 'apple']);
+    });
 });
 
   describe('DELETE', () => {
